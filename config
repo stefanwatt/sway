@@ -1,0 +1,279 @@
+# variables
+# ideally these would be in a separate file, too
+# but apparently race condition doesnt allow for that 
+set $alt Mod1
+set $mod Mod4
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $editor "alacritty --class 'neovim,neovim' -e '/home/stefan/Applications/nvim.appimage'" 
+set $browser "brave"
+set $filemgr "alacritty -e nvim ~"
+set $terminal "alacritty"
+
+# -------------------APPEARANCE--------------------------------------
+output DP-1 mode 3440x1440@144Hz
+font pango:Source Code Pro Medium 10
+
+
+##~~~ Gaps Configuration ~~~~~~~~~~~~~~~ 
+##
+
+# Title bar text alignment
+title_align center
+
+# Uncomment this to enable title bars
+#for_window [class=".*"] border normal 4
+
+# Uncomment this to disable title bars
+for_window [class=".*"] border pixel 3
+
+# Gaps (Outer gaps are added to the inner gaps)
+gaps inner 10
+gaps outer 0
+
+# Only enable gaps on a workspace when there is at least one container
+smart_gaps on
+
+# Activate smart borders (always)
+hide_edge_borders smart
+##~~~ Default Color Scheme (Everforest) 
+##
+
+client.background       #2b3339
+
+# class                 border  backgr. text    indicator child_border
+client.focused          #81A1C1 #81A1C1 #D8DEE9 #a7c080   #81A1C1
+client.focused_inactive #3B4252 #3B4252 #2E3440 #a7c080   #61AFEF
+client.unfocused        #3B4252 #3B4252 #D8DEE9 #a7c080   #3B4252
+client.urgent           #BF616A #BF616A #D8DEE9 #a7c080   #BF616A
+client.placeholder      #2E3440 #2E3440 #D8DEE9 #a7c080   #2E3440
+
+# -------------------END APPEARANCE--------------------------------------
+# -------------------BEHAVIOUR-------------------------------------------
+focus_wrapping yes
+focus_on_window_activation focus
+# -------------------END BEHAVIOUR-------------------------------------------
+# -------------------KEYMAPS-------------------------------------------
+set $mode_config Configure: [i]3wm [k]eybinding [a]lacritty [l]unarvim [n]eovim
+bindsym $mod+Shift+c mode "$mode_config"
+
+mode "$mode_config" {
+
+    bindsym i exec nvim ~/.config/i3/config";mode "default"
+    bindsym k exec "nvim ~/.config/i3/keybindings.conf";mode"default"
+    bindsym a exec "alacritty --class 'neovim,neovim' -e 'nvim ~/.config/alacritty/alacritty.yml'";mode "default"
+    bindsym n exec "nvim ~/.config/nvim/init.lua";mode "default"
+
+    bindsym Escape mode "default"
+    bindsym Return mode "default"
+}
+
+set $mode_launcher Launch: [s]potify [v]volume-control [l]eagueOfLegends
+bindsym $mod+o mode "$mode_launcher"
+
+mode "$mode_launcher" {
+    bindsym s exec spotify; workspace number $ws6;mode "default"
+    bindsym v exec pavucontrol;mode "default"
+    bindsym l exec leagueoflegends start; workspace number $ws5;mode "default"
+
+    bindsym Escape mode "default"
+    bindsym Return mode "default"
+}
+# launch on default workspace
+
+bindsym XF86AudioRaiseVolume exec pulseaudio-control --volume-max 100 --volume-step 5 up
+bindsym XF86AudioLowerVolume exec pulseaudio-control --volume-max 100 --volume-step 5 down
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioPause exec playerctl pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+bindsym $mod+t exec $terminal
+bindsym $mod+b exec $browser; workspace number $ws2
+bindsym $mod+e exec thunar; workspace number $ws3
+bindsym $mod+c exec neovide --multigrid
+bindsym $mod+g exec lutris; workspace number $ws5
+bindsym $mod+l exec i3-layout-manager
+bindsym $mod+j exec rofi -show emoji -modi emoji
+bindsym $mod+m exec spotify
+
+bindsym $mod+$alt+a exec ~/.config/i3/bin/switchAudioDevice.sh
+bindsym $mod+$alt+s exec bash ~/Scripts/switchAudioDevice.sh
+bindsym $mod+$alt+t exec "alacritty --class alacrAlt,alacrAlt"
+bindsym $mod+$alt+b exec chromium
+bindsym $mod+$alt+c exec code
+bindsym $mod+$alt+e exec thunar
+bindsym $mod+$alt+f exec flameshot gui
+# toggle clock
+bindsym $mod+$alt+h [app_id="Clock"] scratchpad show;[app_id="Clock"] resize set width 1730 height 700; [app_id="Clock"] move position center 
+bindsym XF86Launch8 exec neovide --x11-wm-class nvdAlt --multigrid
+
+# toggle scratchpad go-for-it
+bindsym $mod+d [class="Com.github.jmoerman.go-for-it"] scratchpad show; [class="Com.github.jmoerman.go-for-it"] move position center
+# toggle scratchpad terminal
+bindsym $mod+y [app_id="scratchpad"] scratchpad show; [app_id="scratchpad"] resize set width 2200 height 1110; [class="scratchpad"] move position center 
+# toggle autokey
+bindsym $mod+a [class="Autokey-gtk"] scratchpad show
+bindsym $mod+w [class="Variety"] scratchpad show
+# bindsym $mod+space exec ~/.config/rofi/launchers/colorful/launcher.sh
+bindsym $mod+space exec albert toggle
+
+# reload the configuration file
+#bindsym $mod+Shift+c reload
+
+# Restart/Quit i3 session 
+bindsym $mod+r reload
+bindsym $mod+Shift+r exec systemctl reboot
+bindsym $mod+Shift+x exec systemctl poweroff
+bindsym $mod+Shift+q exec "pkill -KILL -u $USER"
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# kill focused window
+bindsym $mod+q kill
+
+# change focus
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+Shift+t split h layout tabbed
+bindsym $mod+Shift+s layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+f floating toggle
+
+
+# focus the parent container
+bindsym $mod+p focus parent
+
+# focus the child container
+# bindsym $mod+Shift+c focus child
+
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym semicolon resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape or $mod+r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+bindsym $mod+Return mode "resize"
+
+# -------------------END KEYMAPS-------------------------------------------
+# -------------------WINDOWS-------------------------------------------
+for_window [class="Brave-browser|Microsoft-edge|firefox" window_type="normal"] move to workspace 2
+for_window [class="Thunar" window_type="normal"] move to workspace 3
+# for_window [class="neovim|neovide|Geany|Code" window_type="normal"] move to workspace 4
+for_window [class="Zenity|zenity|Lutris|leagueclient.exe|leagueclientux.exe"] move to workspace 5
+for_window [class="Spotify"] move to workspace 6
+for_window [class="TelegramDesktop|discord|silos-whatsapp|Signal"] move to workspace 7
+
+for_window [class="Code" window_type="dialog"] floating enable
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="task_dialog"] floating enable
+
+for_window [class="MEGAsync"] floating enable; resize set 402 564; move position center; border pixel 0
+for_window [class="MEGAsync" title="Transfer manager"] floating disable
+for_window [class="zoom"] floating enable
+for_window [class="Chromium"] floating disable
+for_window [class="Alafloat|Matplotlib"] floating enable
+for_window [class="Onboard|Yad"] floating enable
+for_window [class="feh|Viewnior|MPlayer"] floating enable
+
+for_window [class="scratchpad"] floating enable
+for_window [class="scratchpad"] move scratchpad
+for_window [class="Clock"] move scratchpad
+for_window [class="Com.github.jmoerman.go-for-it"] move scratchpad
+for_window [class="Variety"] move scratchpad
+
+for_window [app_id="Brave-browser|Microsoft-edge|firefox" window_type="normal"] move to workspace 2
+for_window [app_id="Thunar" window_type="normal"] move to workspace 3
+for_window [app_id="neovim|neovide|Geany|Code" window_type="normal"] move to workspace 4
+for_window [app_id="Zenity|zenity|Lutris|leagueclient.exe|leagueclientux.exe"] move to workspace 5
+for_window [app_id="Spotify"] move to workspace 6
+for_window [app_id="TelegramDesktop|discord|silos-whatsapp|Signal"] move to workspace 7
+for_window [app_id="Code" window_type="dialog"] floating enable
+for_window [app_id="MEGAsync"] floating enable; resize set 402 564; move position center; border pixel 0
+for_window [app_id="MEGAsync" title="Transfer manager"] floating disable
+for_window [app_id="zoom"] floating enable
+for_window [app_id="Chromium"] floating disable
+for_window [app_id="Alafloat|Matplotlib"] floating enable
+for_window [app_id="Onboard|Yad"] floating enable
+for_window [app_id="feh|Viewnior|MPlayer"] floating enable
+for_window [app_id="scratchpad"] floating enable
+for_window [app_id="scratchpad"] move scratchpad
+for_window [app_id="Clock"] move scratchpad
+for_window [app_id="Com.github.jmoerman.go-for-it"] move scratchpad
+for_window [app_id="Variety"] move scratchpad
+# -------------------END WINDOWS------------------------------------------
+# -------------------WORKSPACES------------------------------------------
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number $ws1;workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2;workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3;workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4;workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5;workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6;workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7;workspace number $ws7
+
+# -------------------END WORKSPACES------------------------------------------
+# -------------------AUTOSTART------------------------------------------
+exec dbus-sway-environment
+exec configure-gtk
+exec systemctl --user import-environment
+exec dunst -conf ~/.config/sway/dunstrc
+exec xsetroot -cursor_name left_ptr 
+exec xfce4-power-manager 
+exec autokey-gtk
+exec alacritty --class scratchpad,scratchpad 
+exec "alacritty -o font.size=36 --class Clock,Clock -e tty-clock -n -s"
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec udiskie
+exec swaybg -m fill -i /home/stefan/.config/sway/wallpaper.png
+exec blueman-applet
+exec albert
+# -------------------END AUTOSTART------------------------------------------
